@@ -1,0 +1,199 @@
+<!DOCTYPE html>
+<html lang="ko">
+<head>
+<meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1">
+<title>판교테크노밸리 vs 청라국제업무지구 비교분석 시스템</title>
+<link rel="stylesheet" href="https://unpkg.com/leaflet@1.9.4/dist/leaflet.css"
+      integrity="sha256-p4NxAoJBhIIN+hmNHrzRCf9tD/miZyoHS5obTRR9BMY=" crossorigin="">
+<link rel="stylesheet" href="assets/style.css">
+</head>
+<body>
+
+<header class="site-header">
+  <div class="header-inner">
+    <div>
+      <h1>판교테크노밸리 <span class="vs">vs</span> 청라국제업무지구</h1>
+      <p class="subtitle">스마트시티 자족용지 비교분석 시스템 — 토지이용 · 철도 접근성 · 사회경제 지표</p>
+    </div>
+    <nav class="tabs" id="tabs">
+      <button class="tab active" data-target="screen-1">화면 1 · 지도 비교</button>
+      <button class="tab" data-target="screen-2">화면 2 · 등시간권</button>
+      <button class="tab" data-target="screen-3">화면 3 · 통계 패널</button>
+    </nav>
+  </div>
+</header>
+
+<main>
+
+<!-- ============================================================ 화면 1 -->
+<section id="screen-1" class="screen active">
+  <div class="screen-head">
+    <h2><span class="num">화면 1</span> 지도 기반 비교 — 구역 경계 · 필지 주용도 · 용도지역</h2>
+    <span class="badge-placeholder hidden" id="badge-1">표본 데이터 — 실데이터 반영 전</span>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl-group">
+      <span class="ctrl-label">레이어</span>
+      <label><input type="checkbox" id="ck-boundary" checked> 구역 경계</label>
+      <label><input type="checkbox" id="ck-parcels" checked> 필지·건축물(주용도)</label>
+      <label><input type="checkbox" id="ck-landuse"> 용도지역</label>
+    </div>
+    <div class="ctrl-group">
+      <button class="btn" id="btn-mode">단일지도 전환</button>
+    </div>
+    <div class="legend" id="legend-1"></div>
+  </div>
+
+  <div class="dual-wrap" id="dual-1">
+    <div class="map-pane">
+      <div class="map-title t-pangyo">판교테크노밸리 (제1판교)</div>
+      <div id="map1-pangyo" class="map"></div>
+    </div>
+    <div class="map-pane" id="pane1-right">
+      <div class="map-title t-cheongna">청라국제업무지구</div>
+      <div id="map1-cheongna" class="map"></div>
+    </div>
+    <div class="loading hidden" id="loading-1"><div class="spinner"></div><p>데이터 불러오는 중…</p></div>
+  </div>
+  <p class="hint">필지를 클릭하면 명칭·주용도·연면적·용적률·층수 팝업이 표시됩니다. 두 지도는 이동·줌이 동기화됩니다.</p>
+</section>
+
+<!-- ============================================================ 화면 2 -->
+<section id="screen-2" class="screen">
+  <div class="screen-head">
+    <h2><span class="num">화면 2</span> 등시간권 비교 — 철도 네트워크 도달권 (판교역 vs 청라국제도시역)</h2>
+    <span class="badge-placeholder hidden" id="badge-2">표본 데이터 — 실데이터 반영 전</span>
+  </div>
+
+  <div class="controls">
+    <div class="ctrl-group">
+      <span class="ctrl-label">시나리오</span>
+      <label><input type="radio" name="scenario" value="current" checked> 현행 (2026-05-04)</label>
+      <label><input type="radio" name="scenario" value="future"> 장래·7호선 연장 등 (2032-12-31)</label>
+      <label><input type="radio" name="scenario" value="pre_gtx"> GTX-A 개통 전 (2024-12-17)</label>
+    </div>
+    <div class="ctrl-group slider-group">
+      <span class="ctrl-label">소요시간</span>
+      <input type="range" id="iso-slider" min="10" max="60" step="10" value="30">
+      <span class="slider-val" id="iso-val">30분</span>
+    </div>
+    <div class="ctrl-group">
+      <label><input type="checkbox" id="ck-stations" checked> 역 마커</label>
+    </div>
+    <div class="legend" id="legend-2"></div>
+  </div>
+
+  <div class="cards-row" id="iso-cards">
+    <div class="stat-card card-pangyo">
+      <h3>판교역 기준 <span id="card-p-min"></span></h3>
+      <div class="stat-grid">
+        <div><span class="stat-k">도달 인구</span><span class="stat-v" id="p-pop">—</span></div>
+        <div><span class="stat-k">도달 종사자</span><span class="stat-v" id="p-workers">—</span></div>
+        <div><span class="stat-k">도달 역 수</span><span class="stat-v" id="p-stations">—</span></div>
+        <div><span class="stat-k">도달권 면적</span><span class="stat-v" id="p-area">—</span></div>
+      </div>
+    </div>
+    <div class="stat-card card-cheongna">
+      <h3>청라국제도시역 기준 <span id="card-c-min"></span></h3>
+      <div class="stat-grid">
+        <div><span class="stat-k">도달 인구</span><span class="stat-v" id="c-pop">—</span></div>
+        <div><span class="stat-k">도달 종사자</span><span class="stat-v" id="c-workers">—</span></div>
+        <div><span class="stat-k">도달 역 수</span><span class="stat-v" id="c-stations">—</span></div>
+        <div><span class="stat-k">도달권 면적</span><span class="stat-v" id="c-area">—</span></div>
+      </div>
+    </div>
+  </div>
+
+  <div class="dual-wrap" id="dual-2">
+    <div class="map-pane">
+      <div class="map-title t-pangyo">판교역 등시간권</div>
+      <div id="map2-pangyo" class="map map-tall"></div>
+    </div>
+    <div class="map-pane">
+      <div class="map-title t-cheongna">청라국제도시역 등시간권</div>
+      <div id="map2-cheongna" class="map map-tall"></div>
+    </div>
+    <div class="loading hidden" id="loading-2"><div class="spinner"></div><p>등시간권 데이터 불러오는 중…</p></div>
+  </div>
+  <p class="hint">역 마커에 마우스를 올리면 핵심역(판교역·청라국제도시역)으로부터의 소요시간이 표시됩니다.
+     역별 소요시간은 <b>현행(2026-05-04) 네트워크 기준</b>이며, 채색은 선택한 시간 내 도달 가능 여부(좌: 판교 기준, 우: 청라 기준)를 나타냅니다.</p>
+</section>
+
+<!-- ============================================================ 화면 3 -->
+<section id="screen-3" class="screen">
+  <div class="screen-head">
+    <h2><span class="num">화면 3</span> 통계 패널 — 두 지역 정량 비교</h2>
+    <span class="badge-placeholder hidden" id="badge-3">표본 데이터 — 실데이터 반영 전</span>
+  </div>
+
+  <div class="chart-grid">
+    <div class="chart-card" id="chart-card-1">
+      <h3>3-1. 용도지역 구성비 (%)</h3>
+      <div class="canvas-box"><canvas id="ch-zone"></canvas></div>
+    </div>
+    <div class="chart-card" id="chart-card-2">
+      <h3>3-2. 건축물 주용도별 연면적 구성 (%)</h3>
+      <div class="canvas-box"><canvas id="ch-gfa"></canvas></div>
+    </div>
+    <div class="chart-card wide" id="chart-card-3">
+      <h3>3-3. 누적 접근성 곡선 — 철도 t분 내 도달 가능 인구·종사자</h3>
+      <div class="canvas-box tall"><canvas id="ch-curve"></canvas></div>
+    </div>
+    <div class="chart-card" id="chart-card-4">
+      <h3>3-4. 인구·종사자·사업체 비교 <small>(로그축)</small></h3>
+      <div class="canvas-box"><canvas id="ch-socio"></canvas></div>
+    </div>
+    <div class="chart-card" id="chart-card-4b">
+      <h3>3-4b. 직주비 (종사자 ÷ 거주인구)</h3>
+      <div class="canvas-box"><canvas id="ch-jh"></canvas></div>
+    </div>
+    <div class="chart-card wide" id="chart-card-5">
+      <h3>3-5. 업종(산업대분류) 종사자 구성 비교 (%)</h3>
+      <div class="canvas-box"><canvas id="ch-industry"></canvas></div>
+    </div>
+    <div class="chart-card wide" id="chart-card-6">
+      <h3>3-6. 종합 지표 비교표</h3>
+      <div id="indicator-table"></div>
+    </div>
+  </div>
+  <div class="loading hidden" id="loading-3"><div class="spinner"></div><p>통계 데이터 불러오는 중…</p></div>
+</section>
+
+</main>
+
+<footer class="site-footer">
+  <div class="foot-grid">
+    <div>
+      <h4>데이터 출처</h4>
+      <ul>
+        <li>구역계·면적: 판교테크노밸리 공식 개요(경기도, 제1판교 661천㎡), IFEZ 청라 국제업무지구 사업개요(278천㎡, B1·B2·B9·B10·C1·C2·M5·M6 블록)</li>
+        <li>건축물: 국토교통부 건축HUB 건축물대장 표제부 / 용도지역·지구단위계획: VWorld(디지털트윈국토)·토지이음</li>
+        <li>인구·가구·종사자: 통계청 SGIS 집계구 통계(인구 2025년) / 사업체·업종: 전국사업체조사(2023년)</li>
+        <li>철도 네트워크: 수도권 도시철도 노드-링크(역·환승·배차 수작업 구축, OSM·KRRI·사업자 보도자료 기반)</li>
+        <li>배경지도 © OpenStreetMap contributors</li>
+      </ul>
+    </div>
+    <div>
+      <h4>분석 가정 (등시간권)</h4>
+      <ul>
+        <li>도보속도 <b>67m/분</b>, 역 중심 도보반경 상한 <b>800m</b></li>
+        <li>첫 탑승 시 노선 배차간격만큼의 <b>대기시간 반영</b>, 환승링크에 도착노선 배차 대기 포함</li>
+        <li>기준시점: 현행 <b>2026-05-04</b> / 장래 2032-12-31(7호선 청라연장 등 반영) / GTX-A 개통 전 2024-12-17</li>
+        <li>좌표계: 분석 EPSG:5179 → 표출 WGS84(EPSG:4326), 폴리곤 단순화 50m</li>
+      </ul>
+    </div>
+  </div>
+  <p class="copyright">스마트시티 기말과제 — 판교테크노밸리 vs 청라국제업무지구 비교분석 · 생성일 2026-06-15</p>
+</footer>
+
+<script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
+        integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
+<script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"
+        integrity="sha256-qlHSoEkbNeX3DgBgLTFBDLbZYzlnZ2Ths2UtOrwIfc="
+        crossorigin="anonymous"></script>
+<script src="assets/iso_logic.js"></script>
+<script src="assets/app.js"></script>
+</body>
+</html>
