@@ -11,8 +11,8 @@
 **판교테크노밸리(성공)**와 **청라국제업무지구(실패)**를 정량 비교하는  
 GitHub Pages 정적 웹 시스템입니다.
 
-**배포 URL**: `https://<your-id>.github.io/<repo-name>/`  
-**원클릭 배포**: `bash deploy.sh <your-id> <repo-name>`  
+**배포 URL**: `https://sunshine294-hub.github.io/smartcity-analysis/`  
+**원클릭 배포**: `bash deploy.sh sunshine294-hub smartcity-analysis`  
 **분석 보고서**: `smartcity_report.pdf` (저장소 루트)  
 > 배포 완료 후 `smartcity_report.pdf` 표지·부록 A의 `sunshine294-hub`을 실제 GitHub ID로 교체하고 `python3 scripts/build_report_html.py`로 재빌드하세요.
 
@@ -73,14 +73,14 @@ git add .
 git commit -m "initial commit: 판교 vs 청라 비교분석 시스템"
 
 # 2. GitHub 원격 연결 및 push
-git remote add origin https://github.com/<your-id>/<repo-name>.git
+git remote add origin https://github.com/sunshine294-hub/smartcity-analysis.git
 git branch -M main
 git push -u origin main
 ```
 
 3. GitHub 레포지토리 → **Settings → Pages → Source: "Deploy from a branch"**  
    Branch: `main` / `(root)` → Save  
-4. 약 1~2분 후 `https://<your-id>.github.io/<repo-name>/` 에서 접근 가능
+4. 약 1~2분 후 `https://sunshine294-hub.github.io/smartcity-analysis/` 에서 접근 가능
 
 ---
 
