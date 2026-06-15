@@ -1,0 +1,429 @@
+{
+  "meta": {
+    "pop_year": 2024,
+    "comp_year": 2023,
+    "generated": "2026-06-13",
+    "placeholder": false,
+    "note": "실측값: 접근성(GTFS·Dijkstra), 건조환경(건축HUB·VWorld·OSM). 인구·고용: KOSIS·성남산업진흥원·IFEZ 2023 공표값."
+  },
+  "landuse": {
+    "zone_share": {
+      "pangyo": {
+        "공업": 2.2,
+        "주거": 59.2,
+        "녹지공원": 23.4,
+        "상업": 15.2
+      },
+      "cheongna": {
+        "주거": 55.5,
+        "녹지공원": 19.8,
+        "공업": 9.7,
+        "상업": 13.7,
+        "기타": 1.3
+      }
+    },
+    "use_share_gfa": {
+      "pangyo": {
+        "기타": 4.1,
+        "근생": 9.9,
+        "주거": 59.6,
+        "교육연구": 5.0,
+        "공장": 1.0,
+        "업무": 20.1,
+        "판매": 0.3
+      },
+      "cheongna": {
+        "기타": 5.4,
+        "근생": 5.9,
+        "교육연구": 7.6,
+        "업무": 18.1,
+        "주거": 50.2,
+        "공장": 11.5,
+        "판매": 1.4
+      }
+    },
+    "lum": {
+      "pangyo": 0.736,
+      "cheongna": 0.747
+    },
+    "far_avg": {
+      "pangyo": 122.8,
+      "cheongna": 122.0
+    },
+    "vacant_ratio": {
+      "pangyo": 18.4,
+      "cheongna": 44.0
+    }
+  },
+  "transport": {
+    "reach": {
+      "current": {
+        "pangyo": {
+          "10": {
+            "pop": 9004,
+            "workers": 30588,
+            "stations": 3,
+            "area_km2": 0.55
+          },
+          "20": {
+            "pop": 131658,
+            "workers": 180790,
+            "stations": 17,
+            "area_km2": 9.26
+          },
+          "30": {
+            "pop": 536696,
+            "workers": 745493,
+            "stations": 48,
+            "area_km2": 35.66
+          },
+          "40": {
+            "pop": 1404570,
+            "workers": 1551500,
+            "stations": 105,
+            "area_km2": 89.72
+          },
+          "50": {
+            "pop": 2947598,
+            "workers": 2711078,
+            "stations": 206,
+            "area_km2": 175.67
+          },
+          "60": {
+            "pop": 5400104,
+            "workers": 4519779,
+            "stations": 305,
+            "area_km2": 306.48
+          }
+        },
+        "cheongna": {
+          "10": {
+            "pop": 0,
+            "workers": 21,
+            "stations": 2,
+            "area_km2": 0.32
+          },
+          "20": {
+            "pop": 9606,
+            "workers": 5981,
+            "stations": 6,
+            "area_km2": 4.18
+          },
+          "30": {
+            "pop": 110476,
+            "workers": 59660,
+            "stations": 25,
+            "area_km2": 16.94
+          },
+          "40": {
+            "pop": 545166,
+            "workers": 254699,
+            "stations": 54,
+            "area_km2": 51.51
+          },
+          "50": {
+            "pop": 1432979,
+            "workers": 727359,
+            "stations": 105,
+            "area_km2": 99.56
+          },
+          "60": {
+            "pop": 3304944,
+            "workers": 1834425,
+            "stations": 197,
+            "area_km2": 194.37
+          }
+        }
+      },
+      "future": {
+        "pangyo": {
+          "10": {
+            "pop": 9004,
+            "workers": 30588,
+            "stations": 3,
+            "area_km2": 0.55
+          },
+          "20": {
+            "pop": 131658,
+            "workers": 180790,
+            "stations": 17,
+            "area_km2": 9.26
+          },
+          "30": {
+            "pop": 539202,
+            "workers": 745469,
+            "stations": 49,
+            "area_km2": 35.67
+          },
+          "40": {
+            "pop": 1465027,
+            "workers": 1593229,
+            "stations": 114,
+            "area_km2": 93.01
+          },
+          "50": {
+            "pop": 3389556,
+            "workers": 3074463,
+            "stations": 246,
+            "area_km2": 199.88
+          },
+          "60": {
+            "pop": 6724113,
+            "workers": 5120176,
+            "stations": 390,
+            "area_km2": 375.63
+          }
+        },
+        "cheongna": {
+          "10": {
+            "pop": 0,
+            "workers": 21,
+            "stations": 2,
+            "area_km2": 0.32
+          },
+          "20": {
+            "pop": 9606,
+            "workers": 5981,
+            "stations": 6,
+            "area_km2": 4.18
+          },
+          "30": {
+            "pop": 110476,
+            "workers": 59660,
+            "stations": 25,
+            "area_km2": 16.94
+          },
+          "40": {
+            "pop": 545166,
+            "workers": 254699,
+            "stations": 54,
+            "area_km2": 51.51
+          },
+          "50": {
+            "pop": 1432979,
+            "workers": 727359,
+            "stations": 105,
+            "area_km2": 99.56
+          },
+          "60": {
+            "pop": 3303483,
+            "workers": 1833655,
+            "stations": 198,
+            "area_km2": 194.3
+          }
+        }
+      },
+      "pre_gtx": {
+        "pangyo": {
+          "10": {
+            "pop": 9004,
+            "workers": 30588,
+            "stations": 3,
+            "area_km2": 0.55
+          },
+          "20": {
+            "pop": 131658,
+            "workers": 180790,
+            "stations": 17,
+            "area_km2": 9.26
+          },
+          "30": {
+            "pop": 536696,
+            "workers": 745493,
+            "stations": 48,
+            "area_km2": 35.66
+          },
+          "40": {
+            "pop": 1404570,
+            "workers": 1551500,
+            "stations": 105,
+            "area_km2": 89.72
+          },
+          "50": {
+            "pop": 2947598,
+            "workers": 2711078,
+            "stations": 206,
+            "area_km2": 175.67
+          },
+          "60": {
+            "pop": 5400104,
+            "workers": 4519779,
+            "stations": 305,
+            "area_km2": 306.48
+          }
+        }
+      }
+    },
+    "curve": {
+      "pangyo": [
+        {
+          "min": 0,
+          "pop": 0,
+          "workers": 0
+        },
+        {
+          "min": 5,
+          "pop": 4502,
+          "workers": 15294
+        },
+        {
+          "min": 10,
+          "pop": 9004,
+          "workers": 30588
+        },
+        {
+          "min": 15,
+          "pop": 70331,
+          "workers": 105689
+        },
+        {
+          "min": 20,
+          "pop": 131658,
+          "workers": 180790
+        },
+        {
+          "min": 25,
+          "pop": 334177,
+          "workers": 463141
+        },
+        {
+          "min": 30,
+          "pop": 536696,
+          "workers": 745493
+        },
+        {
+          "min": 35,
+          "pop": 970633,
+          "workers": 1148496
+        },
+        {
+          "min": 40,
+          "pop": 1404570,
+          "workers": 1551500
+        },
+        {
+          "min": 45,
+          "pop": 2176084,
+          "workers": 2131289
+        },
+        {
+          "min": 50,
+          "pop": 2947598,
+          "workers": 2711078
+        },
+        {
+          "min": 55,
+          "pop": 4173851,
+          "workers": 3615428
+        },
+        {
+          "min": 60,
+          "pop": 5400104,
+          "workers": 4519779
+        }
+      ],
+      "cheongna": [
+        {
+          "min": 0,
+          "pop": 0,
+          "workers": 0
+        },
+        {
+          "min": 5,
+          "pop": 0,
+          "workers": 10
+        },
+        {
+          "min": 10,
+          "pop": 0,
+          "workers": 21
+        },
+        {
+          "min": 15,
+          "pop": 4803,
+          "workers": 3001
+        },
+        {
+          "min": 20,
+          "pop": 9606,
+          "workers": 5981
+        },
+        {
+          "min": 25,
+          "pop": 60041,
+          "workers": 32820
+        },
+        {
+          "min": 30,
+          "pop": 110476,
+          "workers": 59660
+        },
+        {
+          "min": 35,
+          "pop": 327821,
+          "workers": 157179
+        },
+        {
+          "min": 40,
+          "pop": 545166,
+          "workers": 254699
+        },
+        {
+          "min": 45,
+          "pop": 989072,
+          "workers": 491029
+        },
+        {
+          "min": 50,
+          "pop": 1432979,
+          "workers": 727359
+        },
+        {
+          "min": 55,
+          "pop": 2368961,
+          "workers": 1280892
+        },
+        {
+          "min": 60,
+          "pop": 3304944,
+          "workers": 1834425
+        }
+      ]
+    }
+  },
+  "socio": {
+    "pangyo": {
+      "pop": 31700,
+      "hh": 12000,
+      "workers": 90000,
+      "corps": 1600,
+      "jh_ratio": 2.84
+    },
+    "cheongna": {
+      "pop": 70000,
+      "hh": 26000,
+      "workers": 13000,
+      "corps": 320,
+      "jh_ratio": 0.19
+    }
+  },
+  "industry": {
+    "pangyo": {
+      "정보통신업": 46.2,
+      "전문·과학·기술": 23.8,
+      "제조업": 11.4,
+      "금융·보험": 6.2,
+      "도·소매업": 5.1,
+      "기타": 7.3
+    },
+    "cheongna": {
+      "정보통신업": 6.8,
+      "전문·과학·기술": 5.4,
+      "제조업": 8.0,
+      "금융·보험": 18.4,
+      "도·소매업": 18.5,
+      "숙박·음식": 12.2,
+      "기타": 30.7
+    }
+  }
+}

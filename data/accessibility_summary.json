@@ -1,0 +1,227 @@
+{
+  "assumptions": {
+    "walk_speed_m_per_min": 67.0,
+    "walk_radius_cap_m": 800.0,
+    "simplify_tolerance_m": 50.0,
+    "first_boarding_wait": "line_waits.waittm(초) 전체를 가상출발 edge 비용으로 가산",
+    "crs_buffer": "EPSG:5179",
+    "crs_output": "EPSG:4326",
+    "scenario_dates": {
+      "current": "2026-05-04",
+      "future": "2032-12-31",
+      "pre_gtx": "2024-12-17"
+    }
+  },
+  "scenarios": {
+    "current": {
+      "pangyo": {
+        "origin_statnm": "판교",
+        "cutoff_date": "2026-05-04",
+        "active_station_nodes": 817,
+        "active_stations_unique_name": 653,
+        "unreachable_active_nodes": 0,
+        "by_threshold_min": {
+          "10": {
+            "stations_reached_unique_name": 3,
+            "station_nodes_reached": 4,
+            "polygon_area_km2": 0.55
+          },
+          "20": {
+            "stations_reached_unique_name": 17,
+            "station_nodes_reached": 22,
+            "polygon_area_km2": 9.26
+          },
+          "30": {
+            "stations_reached_unique_name": 48,
+            "station_nodes_reached": 62,
+            "polygon_area_km2": 35.66
+          },
+          "40": {
+            "stations_reached_unique_name": 105,
+            "station_nodes_reached": 136,
+            "polygon_area_km2": 89.72
+          },
+          "50": {
+            "stations_reached_unique_name": 206,
+            "station_nodes_reached": 267,
+            "polygon_area_km2": 175.67
+          },
+          "60": {
+            "stations_reached_unique_name": 305,
+            "station_nodes_reached": 404,
+            "polygon_area_km2": 306.48
+          }
+        }
+      },
+      "cheongna": {
+        "origin_statnm": "청라국제도시",
+        "cutoff_date": "2026-05-04",
+        "active_station_nodes": 817,
+        "active_stations_unique_name": 653,
+        "unreachable_active_nodes": 0,
+        "by_threshold_min": {
+          "10": {
+            "stations_reached_unique_name": 2,
+            "station_nodes_reached": 2,
+            "polygon_area_km2": 0.32
+          },
+          "20": {
+            "stations_reached_unique_name": 6,
+            "station_nodes_reached": 7,
+            "polygon_area_km2": 4.18
+          },
+          "30": {
+            "stations_reached_unique_name": 25,
+            "station_nodes_reached": 31,
+            "polygon_area_km2": 16.94
+          },
+          "40": {
+            "stations_reached_unique_name": 54,
+            "station_nodes_reached": 65,
+            "polygon_area_km2": 51.51
+          },
+          "50": {
+            "stations_reached_unique_name": 105,
+            "station_nodes_reached": 130,
+            "polygon_area_km2": 99.56
+          },
+          "60": {
+            "stations_reached_unique_name": 197,
+            "station_nodes_reached": 247,
+            "polygon_area_km2": 194.37
+          }
+        }
+      }
+    },
+    "future": {
+      "pangyo": {
+        "origin_statnm": "판교",
+        "cutoff_date": "2032-12-31",
+        "active_station_nodes": 909,
+        "active_stations_unique_name": 683,
+        "unreachable_active_nodes": 0,
+        "by_threshold_min": {
+          "10": {
+            "stations_reached_unique_name": 3,
+            "station_nodes_reached": 4,
+            "polygon_area_km2": 0.55
+          },
+          "20": {
+            "stations_reached_unique_name": 17,
+            "station_nodes_reached": 22,
+            "polygon_area_km2": 9.26
+          },
+          "30": {
+            "stations_reached_unique_name": 49,
+            "station_nodes_reached": 65,
+            "polygon_area_km2": 35.67
+          },
+          "40": {
+            "stations_reached_unique_name": 114,
+            "station_nodes_reached": 149,
+            "polygon_area_km2": 93.01
+          },
+          "50": {
+            "stations_reached_unique_name": 246,
+            "station_nodes_reached": 338,
+            "polygon_area_km2": 199.88
+          },
+          "60": {
+            "stations_reached_unique_name": 390,
+            "station_nodes_reached": 545,
+            "polygon_area_km2": 375.63
+          }
+        }
+      },
+      "cheongna": {
+        "origin_statnm": "청라국제도시",
+        "cutoff_date": "2032-12-31",
+        "active_station_nodes": 909,
+        "active_stations_unique_name": 683,
+        "unreachable_active_nodes": 0,
+        "by_threshold_min": {
+          "10": {
+            "stations_reached_unique_name": 2,
+            "station_nodes_reached": 2,
+            "polygon_area_km2": 0.32
+          },
+          "20": {
+            "stations_reached_unique_name": 6,
+            "station_nodes_reached": 7,
+            "polygon_area_km2": 4.18
+          },
+          "30": {
+            "stations_reached_unique_name": 25,
+            "station_nodes_reached": 31,
+            "polygon_area_km2": 16.94
+          },
+          "40": {
+            "stations_reached_unique_name": 54,
+            "station_nodes_reached": 65,
+            "polygon_area_km2": 51.51
+          },
+          "50": {
+            "stations_reached_unique_name": 105,
+            "station_nodes_reached": 130,
+            "polygon_area_km2": 99.56
+          },
+          "60": {
+            "stations_reached_unique_name": 198,
+            "station_nodes_reached": 254,
+            "polygon_area_km2": 194.3
+          }
+        }
+      }
+    },
+    "pre_gtx": {
+      "pangyo": {
+        "origin_statnm": "판교",
+        "cutoff_date": "2024-12-17",
+        "active_station_nodes": 809,
+        "active_stations_unique_name": 648,
+        "unreachable_active_nodes": 0,
+        "by_threshold_min": {
+          "10": {
+            "stations_reached_unique_name": 3,
+            "station_nodes_reached": 4,
+            "polygon_area_km2": 0.55
+          },
+          "20": {
+            "stations_reached_unique_name": 17,
+            "station_nodes_reached": 22,
+            "polygon_area_km2": 9.26
+          },
+          "30": {
+            "stations_reached_unique_name": 48,
+            "station_nodes_reached": 62,
+            "polygon_area_km2": 35.66
+          },
+          "40": {
+            "stations_reached_unique_name": 105,
+            "station_nodes_reached": 136,
+            "polygon_area_km2": 89.72
+          },
+          "50": {
+            "stations_reached_unique_name": 206,
+            "station_nodes_reached": 267,
+            "polygon_area_km2": 175.67
+          },
+          "60": {
+            "stations_reached_unique_name": 305,
+            "station_nodes_reached": 404,
+            "polygon_area_km2": 306.48
+          }
+        }
+      }
+    }
+  },
+  "validation": {
+    "pangyo_to_gangnam_min": 17.87,
+    "cheongna_to_seoulstation_min": 48.0,
+    "pangyo_to_cheongna_min": 84.13,
+    "cheongna_to_pangyo_min": 84.13,
+    "negative_or_zero_times": 0,
+    "unreachable_active_nodes_pangyo_current": 0,
+    "unreachable_active_nodes_cheongna_current": 0
+  }
+}
