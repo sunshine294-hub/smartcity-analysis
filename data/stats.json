@@ -2,9 +2,9 @@
   "meta": {
     "pop_year": 2024,
     "comp_year": 2023,
-    "generated": "2026-06-13",
+    "generated": "2026-06-16",
     "placeholder": false,
-    "note": "실측값: 접근성(GTFS·Dijkstra), 건조환경(건축HUB·VWorld·OSM). 인구·고용: KOSIS·성남산업진흥원·IFEZ 2023 공표값."
+    "note": "실측값: 접근성(강의제공 subway_network.zip·Dijkstra), 건조환경(건축HUB·VWorld·OSM). 인구 격자 2024.10·종사자 격자 2023(통계청 국토통계). 종사자·사업체·집행률: 성남산업진흥원·IFEZ·전국사업체조사 2023 공표값."
   },
   "landuse": {
     "zone_share": {
@@ -425,5 +425,12 @@
       "숙박·음식": 12.2,
       "기타": 30.7
     }
+  },
+  "plan": {
+    "exec_rate": {
+      "pangyo": 81.6,
+      "cheongna": 56.0
+    },
+    "note": "집행률=지구단위계획 고시면적 대비 건축물대장 등록 필지면적 비율"
   }
 }
