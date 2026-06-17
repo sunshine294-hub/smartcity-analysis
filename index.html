@@ -1000,6 +1000,7 @@
           ('use_group' in geo.features[0].properties || 'main_use' in geo.features[0].properties);
 
         return L.geoJSON(geo, {
+          renderer: isBuilding ? L.svg() : L.canvas(),
           style: function (f) {
             var p = f.properties;
             var fill = isBuilding
@@ -1105,12 +1106,12 @@
         if (S1.single) {
           var b = S1.bounds.pangyo.pad(0);
           b = L.latLngBounds(b.getSouthWest(), b.getNorthEast()).extend(S1.bounds.cheongna);
-          S1.maps.pangyo.fitBounds(b.pad(0.08));
+          S1.maps.pangyo.fitBounds(b.pad(0.08), { animate: false });
         } else {
-          S1.maps.pangyo.fitBounds(S1.bounds.pangyo.pad(0.15));
-          S1.maps.cheongna.fitBounds(S1.bounds.cheongna.pad(0.15));
+          S1.maps.pangyo.fitBounds(S1.bounds.pangyo.pad(0.15), { animate: false });
+          S1.maps.cheongna.fitBounds(S1.bounds.cheongna.pad(0.15), { animate: false });
         }
-        setTimeout(function () { S1.syncLock = false; }, 250);
+        setTimeout(function () { S1.syncLock = false; }, 80);
       }
 
       function initScreen1() {
@@ -1204,10 +1205,11 @@
           this.classList.toggle('on', S1.single);
           if (S1.bounds.pangyo) applyLayers1();
           setTimeout(function () {
-            S1.maps.pangyo.invalidateSize();
-            S1.maps.cheongna.invalidateSize();
+            S1.syncLock = true;
+            S1.maps.pangyo.invalidateSize({ pan: false });
+            S1.maps.cheongna.invalidateSize({ pan: false });
             if (S1.bounds.pangyo) fitS1();
-          }, 120);
+          }, 150);
         });
       }
 
