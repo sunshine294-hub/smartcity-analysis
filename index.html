@@ -1091,15 +1091,26 @@
 
       /** 모드/체크박스 상태에 따라 레이어 배치 (단일 모드: 모두 좌측 지도에) */
       function applyLayers1() {
+        // 멱등(idempotent): 상태가 바뀐 레이어만 추가/제거 → 안 바뀐 레이어는 다시 그리지 않아 토글이 빠름
         var order = ['landuse', 'parcels', 'buildings', 'boundary'];   // 아래 → 위
         RIDS.forEach(function (rid) {
           var target = S1.single ? S1.maps.pangyo : S1.maps[rid];
           order.forEach(function (kind) {
             var lyr = S1.layers[rid][kind];
             if (!lyr) return;
-            RIDS.forEach(function (m) { if (S1.maps[m].hasLayer(lyr)) S1.maps[m].removeLayer(lyr); });
-            if (S1.enabled[kind]) lyr.addTo(target);
+            // 엉뚱한 지도(단일/듀얼 전환 등)에 올라가 있으면 그쪽에서만 제거
+            RIDS.forEach(function (m) {
+              if (S1.maps[m] !== target && S1.maps[m].hasLayer(lyr)) S1.maps[m].removeLayer(lyr);
+            });
+            if (S1.enabled[kind]) {
+              if (!target.hasLayer(lyr)) lyr.addTo(target);   // 이미 있으면 그대로 둠(재렌더 X)
+            } else if (target.hasLayer(lyr)) {
+              target.removeLayer(lyr);
+            }
           });
+          // 경계선은 항상 맨 위로(폴리곤 2개뿐이라 가벼움)
+          var bl = S1.layers[rid].boundary, bt = S1.single ? S1.maps.pangyo : S1.maps[rid];
+          if (bl && S1.enabled.boundary && bt.hasLayer(bl) && bl.bringToFront) bl.bringToFront();
         });
       }
 
