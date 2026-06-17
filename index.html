@@ -601,7 +601,8 @@
         <div class="ctrl-group">
           <span class="ctrl-label">레이어</span>
           <label><input type="checkbox" id="ck-boundary" checked> 구역 경계</label>
-          <label><input type="checkbox" id="ck-parcels" checked> 필지·건축물(주용도)</label>
+          <label><input type="checkbox" id="ck-buildings" checked> 건축물(주용도)</label>
+          <label><input type="checkbox" id="ck-parcels"> 필지(공시지가)</label>
           <label><input type="checkbox" id="ck-landuse"> 용도지역</label>
         </div>
         <div class="ctrl-group">
@@ -624,7 +625,7 @@
           <p>데이터 불러오는 중…</p>
         </div>
       </div>
-      <p class="hint">필지를 클릭하면 명칭·주용도·연면적·용적률·층수 팝업이 표시됩니다. 두 지도는 이동·줌이 동기화됩니다.</p>
+      <p class="hint">기본 표시되는 <b>건축물(주용도)</b> 레이어에서 건물을 클릭하면 <b>주용도·연면적·용적률·건폐율·사용승인일</b>이 팝업으로 표시됩니다(건축물대장 총괄표제부). <b>용도지역</b> 레이어를 켜면 용도지역 컬러맵·클릭 속성(용도지역명·시군구·결정연도)을, 필지(공시지가) 레이어에서는 지번·공시지가를 볼 수 있습니다. 두 지도는 이동·줌이 동기화됩니다.</p>
     </section>
 
     <!-- ============================================================ 화면 2 -->
@@ -637,9 +638,8 @@
       <div class="controls">
         <div class="ctrl-group">
           <span class="ctrl-label">시나리오</span>
-          <label><input type="radio" name="scenario" value="current" checked> 현행 (2026-05-04)</label>
-          <label><input type="radio" name="scenario" value="future"> 장래·7호선 연장 등 (2032-12-31)</label>
-          <label><input type="radio" name="scenario" value="pre_gtx"> GTX-A 개통 전 (2024-12-17)</label>
+          <label><input type="radio" name="scenario" value="current" checked> 현행망 (2026년 5월 기준)</label>
+          <label><input type="radio" name="scenario" value="future"> 장래 계획망 (서울 7호선 청라연장 2027년~ 등 반영)</label>
         </div>
         <div class="ctrl-group slider-group">
           <span class="ctrl-label">소요시간</span>
@@ -688,7 +688,7 @@
         </div>
       </div>
       <p class="hint">역 마커에 마우스를 올리면 핵심역(판교역·청라국제도시역)으로부터의 소요시간이 표시됩니다.
-        역별 소요시간은 <b>현행(2026-05-04) 네트워크 기준</b>이며, 채색은 선택한 시간 내 도달 가능 여부(좌: 판교 기준, 우: 청라 기준)를 나타냅니다.</p>
+        역별 소요시간은 <b>현행(2026년 5월) 네트워크 기준</b>이며, 채색은 선택한 시간 내 도달 가능 여부(좌: 판교 기준, 우: 청라 기준)를 나타냅니다.</p>
     </section>
 
     <!-- ============================================================ 화면 3 -->
@@ -753,7 +753,7 @@
         <ul>
           <li>도보속도 <b>67m/분</b>, 역 중심 도보반경 상한 <b>800m</b></li>
           <li>첫 탑승 시 노선 배차간격만큼의 <b>대기시간 반영</b>, 환승링크에 도착노선 배차 대기 포함</li>
-          <li>기준시점: 현행 <b>2026-05-04</b> / 장래 2032-12-31(7호선 청라연장 등 반영) / GTX-A 개통 전 2024-12-17</li>
+          <li>기준시점: 현행 <b>2026년 5월</b> / 장래 계획망(서울 7호선 청라연장 2027년~ 등 반영)</li>
           <li>좌표계: 분석 EPSG:5179 → 표출 WGS84(EPSG:4326), 폴리곤 단순화 50m</li>
         </ul>
       </div>
@@ -763,8 +763,7 @@
 
   <script src="https://unpkg.com/leaflet@1.9.4/dist/leaflet.js"
     integrity="sha256-20nQCchB9co0qIjJZRGuk2/Z9VM+kNiyxNV1lvTlZBo=" crossorigin=""></script>
-  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"
-    integrity="sha256-qlHSoEkbNeX3DgBgLTFBDLbZYzlnZ2Ths2UtOrwIfc=" crossorigin="anonymous"></script>
+  <script src="https://cdn.jsdelivr.net/npm/chart.js@4.4.3/dist/chart.umd.min.js"></script>
   <script>
     /**
      * iso_logic.js — 등시간권/통계 핵심 로직 (순수함수 모듈)
@@ -968,8 +967,8 @@
       var S1 = {
         inited: false, single: false,
         maps: {}, layers: { pangyo: {}, cheongna: {} },
-        bounds: {}, enabled: { boundary: true, landuse: false, parcels: true },
-        landuseLoaded: false
+        bounds: {}, enabled: { boundary: true, landuse: false, parcels: false, buildings: true },
+        landuseLoaded: false, parcelsLoaded: false
       };
 
       /* 공시지가 구간 색상 (건축물대장 데이터 없을 때 graceful fallback) */
@@ -1011,6 +1010,7 @@
                 ['대지면적', p.land_m2 != null ? fmt(p.land_m2) + ' ㎡' : '-'],
                 ['용적률', p.far != null ? fmt(p.far, 1) + ' %' : '-'],
                 ['건폐율', p.bcr != null ? fmt(p.bcr, 1) + ' %' : '-'],
+                ['사용승인일', p.approval || '-'],
                 ['층수', p.floors != null ? p.floors + ' F' : '-']
               ];
             } else {
@@ -1052,8 +1052,15 @@
             return { color: '#475569', weight: 0.8, dashArray: '3,3', fillColor: c, fillOpacity: 0.45 };
           },
           onEachFeature: function (f, lyr) {
-            var zoneName = f.properties.uname || f.properties.zone || '(용도지역 불명)';
+            var pr = f.properties;
+            var zoneName = pr.uname || pr.zone || '(용도지역 불명)';
             lyr.bindTooltip(zoneName, { sticky: true });
+            lyr.bindPopup(popupHTML(zoneName, [
+              ['구분', '용도지역'],
+              ['시군구', (pr.sido_name || '') + ' ' + (pr.sigg_name || '') || '-'],
+              ['결정연도', pr.dyear || '-'],
+              ['출처', 'VWorld 토지이용계획(2024)']
+            ]));
           }
         });
       }
@@ -1061,7 +1068,7 @@
       function boundaryLayer(geo, rid) {
         var feats = geo.features.filter(function (f) { return f.properties.region === rid; });
         return L.geoJSON({ type: 'FeatureCollection', features: feats }, {
-          style: { color: REGION[rid].color, weight: 3, fillOpacity: 0.04, dashArray: '6,4' },
+          style: { color: REGION[rid].color, weight: 3, fillOpacity: 0.04, dashArray: '6,4', interactive: false },
           onEachFeature: function (f, lyr) {
             var p = f.properties;
             lyr.bindPopup(popupHTML(p.name, [
@@ -1074,7 +1081,7 @@
 
       /** 모드/체크박스 상태에 따라 레이어 배치 (단일 모드: 모두 좌측 지도에) */
       function applyLayers1() {
-        var order = ['landuse', 'parcels', 'boundary'];   // 아래 → 위
+        var order = ['landuse', 'parcels', 'buildings', 'boundary'];   // 아래 → 위
         RIDS.forEach(function (rid) {
           var target = S1.single ? S1.maps.pangyo : S1.maps[rid];
           order.forEach(function (kind) {
@@ -1109,29 +1116,26 @@
 
         show('loading-1');
         var loadMsg = $('loading-1').querySelector('p');
-        loadMsg.innerHTML = '필지 데이터 불러오는 중…<br><small style="color:#94a3b8">판교 8.7MB + 청라 13.9MB — 네트워크에 따라 5~15초 소요</small>';
+        loadMsg.innerHTML = '데이터 불러오는 중…';
         var t0 = Date.now();
         var timer = setInterval(function () {
-          loadMsg.innerHTML = '필지 데이터 불러오는 중… ' + ((Date.now() - t0) / 1000).toFixed(0) + '초<br><small style="color:#94a3b8">판교 + 청라 필지 로드 중</small>';
+          loadMsg.innerHTML = '데이터 불러오는 중… ' + ((Date.now() - t0) / 1000).toFixed(0) + '초';
         }, 500);
 
         Promise.all([
           loadJSON('data/regions.geojson'),
-          loadJSON('data/parcels_pangyo.geojson'),
-          loadJSON('data/parcels_cheongna.geojson')
+          loadJSON('data/buildings_pangyo.geojson'),
+          loadJSON('data/buildings_cheongna.geojson')
         ]).then(function (res) {
           clearInterval(timer);
           var regions = res[0];
           markPlaceholder('badge-1', regions);
-          markPlaceholder('badge-1', res[1]);
-          var isBuilding = res[1].features.length > 0 &&
-            ('use_group' in res[1].features[0].properties || 'main_use' in res[1].features[0].properties);
           RIDS.forEach(function (rid, i) {
             S1.layers[rid].boundary = boundaryLayer(regions, rid);
-            S1.layers[rid].parcels = parcelLayer(res[1 + i], rid);
+            S1.layers[rid].buildings = parcelLayer(res[1 + i], rid);
             S1.bounds[rid] = S1.layers[rid].boundary.getBounds();
           });
-          updateLegend1(isBuilding);
+          updateLegend1(true);
           applyLayers1();
           fitS1();
         }).catch(function (e) {
@@ -1145,7 +1149,25 @@
           S1.enabled.boundary = e.target.checked; applyLayers1();
         });
         $('ck-parcels').addEventListener('change', function (e) {
-          S1.enabled.parcels = e.target.checked; applyLayers1();
+          S1.enabled.parcels = e.target.checked;
+          if (S1.enabled.parcels && !S1.parcelsLoaded) {
+            show('loading-1');
+            Promise.all([
+              loadJSON('data/parcels_pangyo.geojson'),
+              loadJSON('data/parcels_cheongna.geojson')
+            ]).then(function (res) {
+              S1.parcelsLoaded = true;
+              S1.layers.pangyo.parcels = parcelLayer(res[0], 'pangyo');
+              S1.layers.cheongna.parcels = parcelLayer(res[1], 'cheongna');
+              applyLayers1();
+            }).catch(function (e2) { console.error(e2); alert('필지(공시지가) 로드 실패: ' + e2.message); })
+              .finally(function () { hide('loading-1'); });
+          } else {
+            applyLayers1();
+          }
+        });
+        $('ck-buildings').addEventListener('change', function (e) {
+          S1.enabled.buildings = e.target.checked; updateLegend1(true); applyLayers1();
         });
         $('ck-landuse').addEventListener('change', function (e) {
           S1.enabled.landuse = e.target.checked;
@@ -1171,9 +1193,12 @@
           $('dual-1').classList.toggle('single', S1.single);
           this.textContent = S1.single ? '듀얼지도 전환' : '단일지도 전환';
           this.classList.toggle('on', S1.single);
-          S1.maps.pangyo.invalidateSize();
-          S1.maps.cheongna.invalidateSize();
-          if (S1.bounds.pangyo) { applyLayers1(); fitS1(); }
+          if (S1.bounds.pangyo) applyLayers1();
+          setTimeout(function () {
+            S1.maps.pangyo.invalidateSize();
+            S1.maps.cheongna.invalidateSize();
+            if (S1.bounds.pangyo) fitS1();
+          }, 120);
         });
       }
 
