@@ -22,7 +22,7 @@ GitHub Pages 정적 웹 시스템입니다.
 
 | 데이터 | 출처 | 기준 |
 |--------|------|------|
-| 수도권 지하철 네트워크 그래프 | 강의 제공 `subway_network.zip` | 2024년 운영 기준 |
+| 수도권 지하철 네트워크 그래프 | 강의 제공 `subway_network.zip` | 2026.05 운영 기준 |
 | 토지이용계획(용도지역) | VWorld Data API `LT_C_UQ111` | 2024년 |
 | 지구단위계획 | VWorld Data API `LT_C_UPISUQ153` | 2024년 |
 | 건축물대장 | 건축HUB `getBrTitleInfo` | 2024년 |
@@ -171,7 +171,7 @@ API 키 발급:
 
 ## AI 활용 내역
 
-본 프로젝트는 **Claude Fable 5 (Anthropic)**를 활용하여 개발했습니다.
+본 프로젝트는 **Claude, Anthropic**를 활용하여 개발했습니다.
 
 - 데이터 수집 스크립트 작성 (VWorld API, 건축HUB, OSM Overpass, SGIS)
 - 등시간권 분석 알고리즘 구현 (다익스트라, 폴리곤 공간 교차)
