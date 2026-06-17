@@ -301,6 +301,14 @@
       font-size: 13px;
       line-height: 1.5;
     }
+    .leaflet-tooltip.hover-card {
+      max-width: 300px; white-space: normal; padding: 9px 11px;
+      border-radius: 8px; box-shadow: 0 4px 14px rgba(0,0,0,.18);
+      font-size: 13px; line-height: 1.5; color: #1e293b;
+    }
+    .leaflet-tooltip.hover-card .popup-title { font-weight: 800; font-size: 14px; margin-bottom: 4px; }
+    .leaflet-tooltip.hover-card .popup-table td { padding: 1px 6px 1px 0; color: #64748b; }
+    .leaflet-tooltip.hover-card .popup-table td:last-child { color: #1e293b; font-weight: 600; }
 
     .popup-title {
       font-weight: 800;
@@ -625,7 +633,7 @@
           <p>데이터 불러오는 중…</p>
         </div>
       </div>
-      <p class="hint">기본 표시되는 <b>건축물(주용도)</b> 레이어에서 건물을 클릭하면 <b>주용도·연면적·용적률·건폐율·사용승인일</b>이 팝업으로 표시됩니다(건축물대장 총괄표제부). <b>용도지역</b> 레이어를 켜면 용도지역 컬러맵·클릭 속성(용도지역명·시군구·결정연도)을, 필지(공시지가) 레이어에서는 지번·공시지가를 볼 수 있습니다. 두 지도는 이동·줌이 동기화됩니다.</p>
+      <p class="hint">기본 표시되는 <b>건축물(주용도)</b> 레이어에서 건물에 <b>마우스를 올리면</b> <b>주용도·연면적·용적률·건폐율·사용승인일</b>이 팝업으로 표시됩니다(건축물대장 총괄표제부). <b>용도지역</b> 레이어를 켜면 용도지역 컬러맵과 마우스오버 속성(용도지역명·시군구·결정연도)을, 필지(공시지가) 레이어에서는 지번·공시지가를 볼 수 있습니다. 두 지도는 이동·줌이 동기화됩니다.</p>
     </section>
 
     <!-- ============================================================ 화면 2 -->
@@ -921,12 +929,12 @@
       }
 
       /** 듀얼 지도 동기화: 한쪽의 이동량(Δ)·줌을 다른쪽에 그대로 적용 (서로 다른 지역을 나란히 탐색) */
-      function syncDual(a, b) {
+      function syncDual(a, b, isSuppressed) {
         var lock = false;
         function follow(src, dst, state) {
           src.on('move', function () {
             var c = src.getCenter();
-            if (lock) { state.last = c; return; }
+            if (lock || (isSuppressed && isSuppressed())) { state.last = c; return; }
             lock = true;
             var d = dst.getCenter();
             dst.setView([d.lat + (c.lat - state.last.lat), d.lng + (c.lng - state.last.lng)],
@@ -935,7 +943,7 @@
             lock = false;
           });
           src.on('zoomend', function () {
-            if (lock) return;
+            if (lock || (isSuppressed && isSuppressed())) return;
             lock = true;
             dst.setZoom(src.getZoom(), { animate: false });
             lock = false;
@@ -968,7 +976,7 @@
         inited: false, single: false,
         maps: {}, layers: { pangyo: {}, cheongna: {} },
         bounds: {}, enabled: { boundary: true, landuse: false, parcels: false, buildings: true },
-        landuseLoaded: false, parcelsLoaded: false
+        landuseLoaded: false, parcelsLoaded: false, syncLock: false
       };
 
       /* 공시지가 구간 색상 (건축물대장 데이터 없을 때 graceful fallback) */
@@ -1023,7 +1031,7 @@
                 ['주소', p.addr || '-']
               ];
             }
-            lyr.bindPopup(popupHTML(title, rows));
+            lyr.bindTooltip(popupHTML(title, rows), { sticky: true, direction: 'top', opacity: 0.97, className: 'hover-card' });
           }
         });
       }
@@ -1054,13 +1062,12 @@
           onEachFeature: function (f, lyr) {
             var pr = f.properties;
             var zoneName = pr.uname || pr.zone || '(용도지역 불명)';
-            lyr.bindTooltip(zoneName, { sticky: true });
-            lyr.bindPopup(popupHTML(zoneName, [
+            lyr.bindTooltip(popupHTML(zoneName, [
               ['구분', '용도지역'],
-              ['시군구', (pr.sido_name || '') + ' ' + (pr.sigg_name || '') || '-'],
+              ['시군구', ((pr.sido_name || '') + ' ' + (pr.sigg_name || '')).trim() || '-'],
               ['결정연도', pr.dyear || '-'],
               ['출처', 'VWorld 토지이용계획(2024)']
-            ]));
+            ]), { sticky: true, direction: 'top', opacity: 0.97, className: 'hover-card' });
           }
         });
       }
@@ -1094,6 +1101,7 @@
       }
 
       function fitS1() {
+        S1.syncLock = true;
         if (S1.single) {
           var b = S1.bounds.pangyo.pad(0);
           b = L.latLngBounds(b.getSouthWest(), b.getNorthEast()).extend(S1.bounds.cheongna);
@@ -1102,6 +1110,7 @@
           S1.maps.pangyo.fitBounds(S1.bounds.pangyo.pad(0.15));
           S1.maps.cheongna.fitBounds(S1.bounds.cheongna.pad(0.15));
         }
+        setTimeout(function () { S1.syncLock = false; }, 250);
       }
 
       function initScreen1() {
@@ -1110,7 +1119,7 @@
 
         S1.maps.pangyo = baseMap('map1-pangyo', { center: [37.4025, 127.102], zoom: 14, preferCanvas: true });
         S1.maps.cheongna = baseMap('map1-cheongna', { center: [37.54, 126.645], zoom: 14, preferCanvas: true });
-        syncDual(S1.maps.pangyo, S1.maps.cheongna);
+        syncDual(S1.maps.pangyo, S1.maps.cheongna, function () { return S1.syncLock; });
         /* 초기 범례는 건축물 기준으로 표시 — 데이터 로드 후 갱신 */
         updateLegend1(true);
 
