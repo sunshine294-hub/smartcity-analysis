@@ -46,8 +46,10 @@ GitHub Pages 정적 웹 시스템입니다.
 │   ├── isochrones.geojson  # 등시간권 폴리곤 (current/future/pre_gtx)
 │   ├── landuse_pangyo.geojson      # 판교 용도지역 (VWorld 실측)
 │   ├── landuse_cheongna.geojson    # 청라 용도지역 (VWorld 실측)
-│   ├── parcels_pangyo.geojson      # 판교 건축물 (건축HUB 실측)
-│   ├── parcels_cheongna.geojson    # 청라 건축물 (건축HUB 실측)
+│   ├── buildings_pangyo.geojson    # 판교 건축물 주용도·연면적·용적률 (건축HUB 실측, 화면1 기본 레이어)
+│   ├── buildings_cheongna.geojson  # 청라 건축물 주용도·연면적·용적률 (건축HUB 실측, 화면1 기본 레이어)
+│   ├── parcels_pangyo.geojson      # 판교 필지 공시지가 (선택 레이어)
+│   ├── parcels_cheongna.geojson    # 청라 필지 공시지가 (선택 레이어)
 │   ├── regions.geojson             # 구역 경계
 │   ├── accessibility_summary.json  # 등시간권 역·면적 집계
 │   └── station_times.json          # 역별 최단소요시간
