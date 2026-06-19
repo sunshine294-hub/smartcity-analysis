@@ -998,47 +998,49 @@
         return '#e0f2fe';
       }
 
+      function parcelContent(p, isBuilding) {
+        var rows, title;
+        if (isBuilding) {
+          title = p.name || '(무명 건축물)';
+          rows = [
+            ['주용도', (p.main_use || '-') + ' <span style="color:' + (USE_COLORS[p.use_group] || '#888') + '">●</span> ' + (p.use_group || '-')],
+            ['연면적', p.gfa_m2 != null ? fmt(p.gfa_m2) + ' ㎡' : '-'],
+            ['대지면적', p.land_m2 != null ? fmt(p.land_m2) + ' ㎡' : '-'],
+            ['용적률', p.far != null ? fmt(p.far, 1) + ' %' : '-'],
+            ['건폐율', p.bcr != null ? fmt(p.bcr, 1) + ' %' : '-'],
+            ['사용승인일', p.approval || '-'],
+            ['층수', p.floors != null ? p.floors + ' F' : '-']
+          ];
+        } else {
+          title = p.addr || p.jibun || '(주소 없음)';
+          rows = [
+            ['지번', p.jibun || '-'],
+            ['개별공시지가', p.jiga ? fmt(Number(p.jiga)) + ' 원/㎡' : '-'],
+            ['기준연월', (p.gosi_year || '') + (p.gosi_month ? '-' + p.gosi_month : '')],
+            ['주소', p.addr || '-']
+          ];
+        }
+        return popupHTML(title, rows);
+      }
+
       function parcelLayer(geo, rid) {
-        /* 건축물대장 데이터인지 공시지가 데이터인지 자동 감지 */
+        /* 건축물대장/공시지가 자동 감지 */
         var isBuilding = geo.features.length > 0 &&
           ('use_group' in geo.features[0].properties || 'main_use' in geo.features[0].properties);
-
-        return L.geoJSON(geo, {
+        /* 레이어 전용 캔버스: 이 레이어만 켜고 끌 때 다른 레이어를 다시 그리지 않음 */
+        var gj = L.geoJSON(geo, {
+          renderer: L.canvas({ padding: 0.5 }),
           style: function (f) {
             var p = f.properties;
-            var fill = isBuilding
-              ? (USE_COLORS[p.use_group] || USE_COLORS['기타'])
-              : jiGaColor(p.jiga);
+            var fill = isBuilding ? (USE_COLORS[p.use_group] || USE_COLORS['기타']) : jiGaColor(p.jiga);
             return { color: '#334155', weight: isBuilding ? 0.7 : 0.3, fillColor: fill, fillOpacity: 0.72 };
-          },
-          onEachFeature: function (f, lyr) {
-            var p = f.properties;
-            var rows, title;
-            if (isBuilding) {
-              title = p.name || '(무명 건축물)';
-              rows = [
-                ['주용도', (p.main_use || '-') + ' <span style="color:' + (USE_COLORS[p.use_group] || '#888') + '">●</span> ' + (p.use_group || '-')],
-                ['연면적', p.gfa_m2 != null ? fmt(p.gfa_m2) + ' ㎡' : '-'],
-                ['대지면적', p.land_m2 != null ? fmt(p.land_m2) + ' ㎡' : '-'],
-                ['용적률', p.far != null ? fmt(p.far, 1) + ' %' : '-'],
-                ['건폐율', p.bcr != null ? fmt(p.bcr, 1) + ' %' : '-'],
-                ['사용승인일', p.approval || '-'],
-                ['층수', p.floors != null ? p.floors + ' F' : '-']
-              ];
-            } else {
-              /* 공시지가 데이터 팝업 */
-              title = p.addr || p.jibun || '(주소 없음)';
-              rows = [
-                ['지번', p.jibun || '-'],
-                ['개별공시지가', p.jiga ? fmt(Number(p.jiga)) + ' 원/㎡' : '-'],
-                ['기준연월', (p.gosi_year || '') + (p.gosi_month ? '-' + p.gosi_month : '')],
-                ['주소', p.addr || '-']
-              ];
-            }
-            lyr.bindTooltip(popupHTML(title, rows), { sticky: true, direction: 'top', opacity: 0.97, className: 'hover-card' });
-            if (isBuilding) lyr.bindPopup(popupHTML(title, rows));  // 클릭 시 속성 팝업(과제 §4 건축물 클릭 요건)
           }
         });
+        /* 도형마다 핸들러를 붙이지 않고 레이어 그룹에 한 번만 바인딩 → 대량 필지도 토글이 즉시 */
+        gj.bindTooltip(function (layer) { return parcelContent(layer.feature.properties, isBuilding); },
+          { sticky: true, direction: 'top', opacity: 0.97, className: 'hover-card' });
+        if (isBuilding) gj.bindPopup(function (layer) { return parcelContent(layer.feature.properties, true); });
+        return gj;
       }
 
       function updateLegend1(isBuilding) {
@@ -1056,25 +1058,26 @@
 
       function landuseLayer(geo) {
         var fb = 0;
-        return L.geoJSON(geo, {
+        var gj = L.geoJSON(geo, {
+          renderer: L.canvas({ padding: 0.5 }),
           style: function (f) {
-            /* 실데이터: 'uname' 필드 / 구형 placeholder: 'zone' 필드 */
             var z = f.properties.uname || f.properties.zone;
             var c = ZONE_COLORS[z];
             if (!c) { c = ZONE_FALLBACK[fb % ZONE_FALLBACK.length]; fb++; if (z) ZONE_COLORS[z] = c; }
             return { color: '#475569', weight: 0.8, dashArray: '3,3', fillColor: c, fillOpacity: 0.45 };
-          },
-          onEachFeature: function (f, lyr) {
-            var pr = f.properties;
-            var zoneName = pr.uname || pr.zone || '(용도지역 불명)';
-            lyr.bindTooltip(popupHTML(zoneName, [
-              ['구분', '용도지역'],
-              ['시군구', ((pr.sido_name || '') + ' ' + (pr.sigg_name || '')).trim() || '-'],
-              ['결정연도', pr.dyear || '-'],
-              ['출처', 'VWorld 토지이용계획(2024)']
-            ]), { sticky: true, direction: 'top', opacity: 0.97, className: 'hover-card' });
           }
         });
+        gj.bindTooltip(function (layer) {
+          var pr = layer.feature.properties;
+          var zoneName = pr.uname || pr.zone || '(용도지역 불명)';
+          return popupHTML(zoneName, [
+            ['구분', '용도지역'],
+            ['시군구', ((pr.sido_name || '') + ' ' + (pr.sigg_name || '')).trim() || '-'],
+            ['결정연도', pr.dyear || '-'],
+            ['출처', 'VWorld 토지이용계획(2024)']
+          ]);
+        }, { sticky: true, direction: 'top', opacity: 0.97, className: 'hover-card' });
+        return gj;
       }
 
       function boundaryLayer(geo, rid) {
