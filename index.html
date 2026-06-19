@@ -903,7 +903,7 @@
       var ZONE_FALLBACK = ['#60a5fa', '#f472b6', '#34d399', '#c084fc', '#fb7185'];
 
       var TILE_URL = 'https://{s}.tile.openstreetmap.org/{z}/{x}/{y}.png';
-      var TILE_OPT = { maxZoom: 19, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' };
+      var TILE_OPT = { maxZoom: 19, updateWhenIdle: true, updateWhenZooming: false, keepBuffer: 4, attribution: '&copy; <a href="https://www.openstreetmap.org/copyright">OpenStreetMap</a> contributors' };
 
       /* ---------------- 유틸 ---------------- */
       function $(id) { return document.getElementById(id); }
@@ -1133,8 +1133,8 @@
         if (S1.inited) return;
         S1.inited = true;
 
-        S1.maps.pangyo = baseMap('map1-pangyo', { center: [37.4025, 127.102], zoom: 14, preferCanvas: false });
-        S1.maps.cheongna = baseMap('map1-cheongna', { center: [37.54, 126.645], zoom: 14, preferCanvas: false });
+        S1.maps.pangyo = baseMap('map1-pangyo', { center: [37.4025, 127.102], zoom: 14, preferCanvas: true });
+        S1.maps.cheongna = baseMap('map1-cheongna', { center: [37.54, 126.645], zoom: 14, preferCanvas: true });
         syncDual(S1.maps.pangyo, S1.maps.cheongna, function () { return S1.syncLock; });
         /* 초기 범례는 건축물 기준으로 표시 — 데이터 로드 후 갱신 */
         updateLegend1(true);
